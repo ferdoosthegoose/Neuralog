@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>title</title>
+    <link rel="stylesheet" href="d.memory copy.css" />
+</head>
+
+
+<body>
+    
+        <label for="coc-input">Is there a date in mind?</label>
+        <input class="coc-input" type="date"/>
+        <br><br>
+    <label for="fileInput">Upload an image:</label>
+<input type="file" id="fileInput" accept="image/*" style="display: none;" />
+
+    <label for="fileInput" class="custom-file-upload" placeholder: <img src="static/placeholderimage.png" alt="Upload Image" style="width: 20px; height: 20px; vertical-align: middle;">
+
+    <style>
+        .custom-file-upload {
+            display: inline-block;
+            padding: 6px 12px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .custom-file-upload:hover {
+            background-color: #e0e0e0;
+        }
+        </style>
+    <div id="imageContainer"></div>
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    document.getElementById('imageContainer').innerHTML = ''; // Clear previous images
+                    document.getElementById('imageContainer').appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+    </script>
+    <textarea class="textarea" placeholder="What happened in this memory..."></textarea>
+</body>
+</html>
+           

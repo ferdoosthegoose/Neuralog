@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="people.css">
+    
+</head>
+<body>
+    <div class="profile-card">
+        <div class="profile-header">
+            
+        </div>
+        
+        <div class="profile-info">
+            <div class="name-age"></div>
+            <div class="relation"></div>
+            
+            <div class="bio-text">
+            
+            </div>
+            
+            <div class="bio-text"></div>
+            
+            <div class="voice-note-container">
+                <button class="voice-note-button" id="voiceNoteButton">
+                    <div class="play-icon"></div>
+                    <div class="voice-note-info">
+
+                    </div>
+                </button>
+                <div class="progress-bar">
+                    <div class="progress" id="progressBar"></div>
+                </div>
+            </div>
+            <button id="removePerson" style="margin-top:20px; background:#e74c3c; color:#fff; border:none; padding:10px 20px; border-radius:5px; cursor:pointer;">
+        Remove Person
+    </button>
+        </div>
+    </div>
+
+    <script>
+
+const voiceNoteButton = document.getElementById('voiceNoteButton');
+        const progressBar = document.getElementById('progressBar');
+        let isPlaying = false;
+        let progressInterval;
+        voiceNoteButton.addEventListener('click', function() {
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                // Start playing simulation
+                voiceNoteButton.classList.add('playing');
+                // Simulate progress bar moving
+                let progress = 0;
+                progressInterval = setInterval(() => {
+                    progress += 1;
+                    if (progress <= 100) {
+                        progressBar.style.width = progress + '%';
+                    } else {
+                        clearInterval(progressInterval);
+                        isPlaying = false;
+                        voiceNoteButton.classList.remove('playing');
+                        progressBar.style.width = '0%';
+                    }
+                }, 120); // 12 seconds total
+            } else {
+                // Stop playing
+                voiceNoteButton.classList.remove('playing');
+                clearInterval(progressInterval);
+                progressBar.style.width = '0%';
+            }
+        });
+
+
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+    const name = getQueryParam('person');
+    const people = JSON.parse(localStorage.getItem('people')) || [];
+    const person = people.find(p => p.name === name);
+
+    if (person) {
+        document.querySelector('.name-age').textContent = `${person.name}, ${person.age}`;
+        document.querySelector('.relation').textContent = person.relation;
+        document.querySelectorAll('.bio-text').forEach(el => el.textContent = person.bio);
+        if (person.image) {
+            const img = document.createElement('img');
+            img.src = person.image;
+            img.style.maxWidth = '200px';
+            document.querySelector('.profile-header').appendChild(img);
+        }
+    }
+
+    // Remove person functionality
+    document.getElementById('removePerson').addEventListener('click', function() {
+        if (confirm('Are you sure you want to remove this person?')) {
+            const updatedPeople = people.filter(p => p.name !== name);
+            localStorage.setItem('people', JSON.stringify(updatedPeople));
+            console.log('Redirecting to navbar copy.html');
+            window.location.href = './navbar copy.html';
+        }
+    });
+});
+
+
+</script>
+</body>
+</html>
